@@ -1,0 +1,6 @@
+#*References*:
+1- https://en.wikipedia.org/wiki/Enron
+2- https://www.cs.cmu.edu/~./enron/
+3- http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html
+4- http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html
+5- http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html#sklearn.cross_validation.StratifiedShuffleSplit
