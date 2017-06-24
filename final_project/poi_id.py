@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
+
 import sys
 import pickle
 sys.path.append("../tools/")
-
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
 from sklearn.feature_selection import SelectKBest, f_classif
@@ -34,7 +34,6 @@ with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
 ### Task 2: Remove outliers
-
 print "number of data points in the dataset: ", len(data_dict)
 
 print "print out the person names in the dataset: "
@@ -54,6 +53,7 @@ for p in data_dict.values():
         npoi += 1
 print "number of person of interest = ", npoi
 #print "number of person who is not of interset = ", len(data_dict) - npoi
+
 
 print "Number of missing values in all features: "
 NaNInFeatures = [0 for i in range(len(features_list))]
@@ -76,10 +76,9 @@ for name, person in data_dict.iteritems():
         salary.append(float(person['salary']))
 print "Sum of salary amount of other persons =",np.sum(salary)/2 
 
-
 ## Remove the outlier
-
 data_dict.pop('TOTAL')
+
 
 print "number of data points in the dataset after remove 'TOTAl' =", len(data_dict)
 
@@ -87,8 +86,8 @@ print "number of data points in the dataset after remove 'TOTAl' =", len(data_di
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
 
-print "2 new features 'to_poi_message_ratio' and 'from_poi_message_ratio' are created"
 
+print "2 new features 'to_poi_message_ratio' and 'from_poi_message_ratio' are created"
 for person in my_dataset.values():
     person['to_poi_message_ratio'] = 0
     person['from_poi_message_ratio'] = 0
@@ -104,17 +103,25 @@ data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 
 ### Task 4: Try a varity of classifiers
-### Please name your classifier clf for easy export below.
+## Try to use stratifieldshufflesplit to find the best subset of features to use
+print "start selecting feautres: "
+scv = StratifiedShuffleSplit(labels, 1000, random_state = 42)
+RF_acc = []
+RF_precision = []
+RF_recall = []
+ADA_acc = []	
+ADA_precision = []
+ADA_recall = []
+
 ### Note that if you want to do PCA or other multi-stage operations,
-### you'll need to use Pipelines. For more info:
-### http://scikit-learn.org/stable/modules/pipeline.html
+### you'll need to use Pipelines. For more info: http://scikit-learn.org/stable/modules/pipeline.html
 
 # Provided to give you a starting point. Try a variety of classifiers.
-#from sklearn.naive_bayes import GaussianNB
-#clf = GaussianNB()
+
 
 def cvClassifier(clf, features, labels, cv):
-    true_negatives = 0
+    
+	true_negatives = 0
     false_negatives = 0
     true_positives = 0
     false_positives = 0
@@ -139,8 +146,7 @@ def cvClassifier(clf, features, labels, cv):
             elif prediction == 1 and truth == 0:
                 false_positives += 1
             elif prediction == 1 and truth == 1:
-                true_positives += 1
-				
+                true_positives += 1			
     total_predictions = true_negatives + false_negatives + false_positives + true_positives
     accuracy = round(1.0*(true_positives + true_negatives)/total_predictions,2)
     precision = round(1.0*true_positives/(true_positives+false_positives),2)
@@ -172,6 +178,8 @@ for i in range(len(features[0])):
     print "ADA acc: {0}  precision: {1}  recall: {2}".format(ADA_acc[-1], ADA_precision[-1], ADA_recall[-1])
 
 
+	
+	
 print "plotting the scores for each classifiers for different best k features that used"
 rfdf = pd.DataFrame({'RF_acc': RF_acc, 'RF_pre': RF_precision, 'RF_rec': RF_recall})
 adadf = pd.DataFrame({'ADA_acc': ADA_acc, 'ADA_pre': ADA_precision, 'ADA_rec': ADA_recall})                   
@@ -182,10 +190,11 @@ plt.show()
 
 print "It seems that using randomforest model results a higher precision and lower recall. The opposite is true for adaboost model, it results a higher recall but lower precision. While the accuracy for both classifiers are about the same."
 
+
+
 selector = SelectKBest(f_classif, k = ADA_recall.index(max(ADA_recall))+1)
 selector.fit(features, labels)
 cutoff = np.sort(selector.scores_)[::-1][ADA_recall.index(max(ADA_recall))+1]
-
 selected_features_list = [f for i, f in enumerate(features_list[1:]) if selector.scores_[i] > cutoff]
 selected_features_list = ['poi'] + selected_features_list
 selected_features = selector.fit_transform(features, labels)
@@ -211,13 +220,7 @@ for f in selected_features_list[1:]:
 ### stratified shuffle split cross validation. For more info: 
 ### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
 
-# Example starting point. Try investigating other evaluation techniques!
-#from sklearn.cross_validation import train_test_split
-#features_train, features_test, labels_train, labels_test = \
-#    train_test_split(features, labels, test_size=0.3, random_state=42)
-
 ## Randomforest:
-
 t0 = time()
 tuning_parameters = {'n_estimators': [20,50,100], 'min_samples_split': [1,2,4], 'max_features': [1,2,3]}
 print("# Tuning hyper-parameters for recall")
@@ -231,8 +234,8 @@ Clf = RF.best_estimator_
 print "measurements for tuned randomforest classifier: "
 test_classifier(Clf, my_dataset, selected_features_list, folds = 1000)
 
-## Adaboost
 
+## Adaboost
 t0 = time()
 tuned_parameters = {'n_estimators': [50,100,200], 'learning_rate': [0.4,0.6,1]}
 print("# Tuning hyper-parameters for recall")
@@ -251,9 +254,5 @@ test_classifier(Clf, my_dataset, selected_features_list, folds = 1000)
 ### that the version of poi_id.py that you submit can be run on its own and
 ### generates the necessary .pkl files for validating your results.
 
-
 Clf = RF.best_estimator_
 dump_classifier_and_data(Clf, my_dataset, selected_features_list)
-
-
-dump_classifier_and_data(clf, my_dataset, features_list)
