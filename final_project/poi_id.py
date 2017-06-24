@@ -84,23 +84,61 @@ print "number of data points in the dataset after remove 'TOTAl' =", len(data_di
 
 ### Task 3: Create new feature(s):
 ### Store to my_dataset for easy export below.
+
 my_dataset = data_dict
 
+def compute_fraction(poi_messages, all_messages):
+    """ return fraction of messages from/to that person to/from POI"""    
+    if poi_messages == 'NaN' or all_messages == 'NaN':
+        return 0.
+    fraction = poi_messages / all_messages
+    return fraction
 
-print "2 new features 'to_poi_message_ratio' and 'from_poi_message_ratio' are created"
-for person in my_dataset.values():
-    person['to_poi_message_ratio'] = 0
-    person['from_poi_message_ratio'] = 0
-    if float(person['from_messages']) > 0:
-        person['to_poi_message_ratio'] = float(person['from_this_person_to_poi'])/float(person['from_messages'])
-    if float(person['to_messages']) > 0:
-        person['from_poi_message_ratio'] = float(person['from_poi_to_this_person'])/float(person['to_messages'])
+for name in my_dataset:
+    data_point = my_dataset[name]
+    from_poi_to_this_person = data_point["from_poi_to_this_person"]
+    to_messages = data_point["to_messages"]
+    fraction_from_poi = compute_fraction(from_poi_to_this_person, to_messages)
+    data_point["fraction_from_poi"] = fraction_from_poi
+    from_this_person_to_poi = data_point["from_this_person_to_poi"]
+    from_messages = data_point["from_messages"]
+    fraction_to_poi = compute_fraction(from_this_person_to_poi, from_messages)
+    data_point["fraction_to_poi"] = fraction_to_poi
 
-features_list.extend(['to_poi_message_ratio', 'from_poi_message_ratio'])
+my_feature_list = features_list+['to_messages', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi',
+                                 'shared_receipt_with_poi', 'fraction_to_poi']
 
-### Extract features and labels from dataset for local testing
-data = featureFormat(my_dataset, features_list, sort_keys = True)
+num_features = 10 
+
+def get_k_best(data_dict, features_list, k):
+
+#runs scikit-learn's SelectKBest feature selection returns dict where keys=features, values=scores
+
+    data = featureFormat(data_dict, features_list)
+    labels, features = targetFeatureSplit(data)
+
+    k_best = SelectKBest(k=k)
+    k_best.fit(features, labels)
+    scores = k_best.scores_
+    unsorted_pairs = zip(features_list[1:], scores)
+    sorted_pairs = list(reversed(sorted(unsorted_pairs, key=lambda x: x[1])))
+    k_best_features = dict(sorted_pairs[:k])
+    print "{0} best features: {1}\n".format(k, k_best_features.keys())
+    return k_best_features
+
+best_features = get_k_best(my_dataset, my_feature_list, num_features)
+
+my_feature_list = [target_label] + best_features.keys()
+
+print "{0} selected features: {1}\n".format(len(my_feature_list) - 1, my_feature_list[1:])
+
+data = featureFormat(my_dataset, my_feature_list)
+
 labels, features = targetFeatureSplit(data)
+
+from sklearn import preprocessing
+scaler = preprocessing.MinMaxScaler()
+features = scaler.fit_transform(features)
 
 ### Task 4: Try a varity of classifiers
 ## Try to use stratifieldshufflesplit to find the best subset of features to use
