@@ -33,7 +33,7 @@ exercised_stock_options 		22.510
 
 total_stock_value			      22.349
 
-bonus					                20.792
+bonus					          20.792
 
 salary			              		18.289
 
@@ -57,7 +57,9 @@ I improved this section by applying Support Vector Machine & Logistic Regression
 
 Post-tuning results of them as following:
 Algorithm:   Logistic Regression     Percision:     0.382       Recall:  0.415
+
 Algorithm:   Support Vector Classifier     Percision:    0.518        Recall:  0.219
+
 Algorithm:   Random Forest Classifier     Percision:       0.321     Recall:   0.158
 
 Parameters tuning refers to the adjustment of the algorithm when training, in order to improve the fit on the test set. Parameter can influence the outcome of the learning process, the more tuned the parameters, the more biased the algorithm will be to the training data & test harness. The strategy can be effective but it can also lead to more fragile models & overfit the test harness but don't perform well in practice
