@@ -52,7 +52,7 @@ for p in data_dict.values():
     if p['poi']:
         npoi += 1
 print "number of person of interest = ", npoi
-#print "number of person who is not of interset = ", len(data_dict) - npoi
+
 
 
 print "Number of missing values in all features: "
