@@ -142,155 +142,100 @@ features = scaler.fit_transform(features)
 
 ### Task 4: Try a varity of classifiers
 ## Try to use stratifieldshufflesplit to find the best subset of features to use
-print "start selecting feautres: "
-scv = StratifiedShuffleSplit(labels, 1000, random_state = 42)
-RF_acc = []
-RF_precision = []
-RF_recall = []
-ADA_acc = []	
-ADA_precision = []
-ADA_recall = []
 
-### Note that if you want to do PCA or other multi-stage operations,
-### you'll need to use Pipelines. For more info: http://scikit-learn.org/stable/modules/pipeline.html
+#  Logistic Regression Classifier
 
-# Provided to give you a starting point. Try a variety of classifiers.
+from sklearn.linear_model import LogisticRegression
+
+l_clf = Pipeline(steps=[
+
+        ('scaler', StandardScaler()),
+
+        ('classifier', LogisticRegression(tol = 0.001, C = 10**-8, penalty = 'l2', random_state = 42))])
+
+### Support Vector Machine Classifier
+
+from sklearn.svm import SVC
+
+s_clf = SVC(kernel='rbf', C=1000,gamma = 0.0001,random_state = 42, class_weight = 'auto')
 
 
-def cvClassifier(clf, features, labels, cv):
-    
-	true_negatives = 0
-    false_negatives = 0
-    true_positives = 0
-    false_positives = 0
-    for train_idx, test_idx in cv: 
-        features_train = []
-        features_test  = []
-        labels_train   = []
-        labels_test    = []
-        for ii in train_idx:
-            features_train.append( features[ii] )
-            labels_train.append( labels[ii] )
-        for jj in test_idx:
-            features_test.append( features[jj] )
-            labels_test.append( labels[jj] )
+
+### Random Forest
+
+from sklearn.ensemble import RandomForestClassifier
+
+rf_clf = RandomForestClassifier(max_depth = 5,max_features = 'sqrt',n_estimators = 10, random_state = 42)
+
+
+
+
+
+###TAsk 5: evaluate function
+
+def evaluate_clf(clf, features, labels, num_iters=1000, test_size=0.3):
+
+    print clf
+
+    accuracy = []
+
+    precision = []
+
+    recall = []
+
+    first = True
+
+    for trial in range(num_iters):
+
+        features_train, features_test, labels_train, labels_test =\
+
+            cross_validation.train_test_split(features, labels, test_size=test_size)
+
         clf.fit(features_train, labels_train)
+
         predictions = clf.predict(features_test)
-        for prediction, truth in zip(predictions, labels_test):
-            if prediction == 0 and truth == 0:
-                true_negatives += 1
-            elif prediction == 0 and truth == 1:
-                false_negatives += 1
-            elif prediction == 1 and truth == 0:
-                false_positives += 1
-            elif prediction == 1 and truth == 1:
-                true_positives += 1			
-    total_predictions = true_negatives + false_negatives + false_positives + true_positives
-    accuracy = round(1.0*(true_positives + true_negatives)/total_predictions,2)
-    precision = round(1.0*true_positives/(true_positives+false_positives),2)
-    recall = round(1.0*true_positives/(true_positives+false_negatives),2)
-    return accuracy, precision, recall
-	
-print "randomforest and an adaboost model are trainned for each of the best k features "
 
-for i in range(len(features[0])):
-    t0 = time()
-    selector = SelectKBest(f_classif, k = i+1)
-    selector.fit(features, labels)
-    reduced_features = selector.fit_transform(features, labels)
-    cutoff = np.sort(selector.scores_)[::-1][i]
-    selected_features_list = [f for j, f in enumerate(features_list[1:]) if selector.scores_[j] >= cutoff]
-    selected_features_list = ['poi'] + selected_features_list
-    RF = RandomForestClassifier(random_state=1126)
-    adaBoost = AdaBoostClassifier(random_state=1126)
-    acc, precision, recall = cvClassifier(RF, reduced_features, labels, scv)
-    RF_acc.append(acc)
-    RF_precision.append(precision)
-    RF_recall.append(recall)
-    acc, precision, recall = cvClassifier(adaBoost, reduced_features, labels, scv)
-    ADA_acc.append(acc)
-    ADA_precision.append(precision)
-    ADA_recall.append(recall)
-    print "fitting time for k = {0}: {1}".format(i+1, round(time()-t0, 3))
-    print "RF acc: {0}  precision: {1}  recall: {2}".format(RF_acc[-1], RF_precision[-1], RF_recall[-1])
-    print "ADA acc: {0}  precision: {1}  recall: {2}".format(ADA_acc[-1], ADA_precision[-1], ADA_recall[-1])
+        accuracy.append(accuracy_score(labels_test, predictions))
+
+        precision.append(precision_score(labels_test, predictions))
+
+        recall.append(recall_score(labels_test, predictions))
+
+        if trial % 10 == 0:
+
+            if first:
+
+                sys.stdout.write('\nProcessing')
+
+            sys.stdout.write('.')
+
+            sys.stdout.flush()
+
+            first = False
 
 
-	
-	
-print "plotting the scores for each classifiers for different best k features that used"
-rfdf = pd.DataFrame({'RF_acc': RF_acc, 'RF_pre': RF_precision, 'RF_rec': RF_recall})
-adadf = pd.DataFrame({'ADA_acc': ADA_acc, 'ADA_pre': ADA_precision, 'ADA_rec': ADA_recall})                   
-rfdf.plot()
-plt.show()
-adadf.plot()
-plt.show()
+    print "precision: {}".format(mean(precision))
 
-print "It seems that using randomforest model results a higher precision and lower recall. The opposite is true for adaboost model, it results a higher recall but lower precision. While the accuracy for both classifiers are about the same."
+    print "recall:    {}".format(mean(recall))
+
+    return mean(precision), mean(recall)
+
+
+## Evaluate all functions
+
+evaluate_clf(l_clf, features, labels)
+
+evaluate_clf(s_clf, features, labels)
+
+evaluate_clf(rf_clf, features, labels)
 
 
 
-selector = SelectKBest(f_classif, k = ADA_recall.index(max(ADA_recall))+1)
-selector.fit(features, labels)
-cutoff = np.sort(selector.scores_)[::-1][ADA_recall.index(max(ADA_recall))+1]
-selected_features_list = [f for i, f in enumerate(features_list[1:]) if selector.scores_[i] > cutoff]
-selected_features_list = ['poi'] + selected_features_list
-selected_features = selector.fit_transform(features, labels)
-
-print "number of features selected = ", len(selected_features_list)-1
-print "list of features: "
-for f in selected_features_list[1:]:
-    print f
-
-RF = RandomForestClassifier(random_state=1126)
-RF.fit(selected_features, labels)
-print "list of important features for these selected features: "
-print RF.feature_importances_
-
-print "Feature scores for the selected features from Select K Best: "
-for f in selected_features_list[1:]:
-	print f, "score is: ", selector.scores_[features_list[1:].index(f)]
-
-### Task 5: Tune your classifier to achieve better than .3 precision and recall 
-### using our testing script. Check the tester.py script in the final project
-### folder for details on the evaluation method, especially the test_classifier
-### function. Because of the small size of the dataset, the script uses
-### stratified shuffle split cross validation. For more info: 
-### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
-
-## Randomforest:
-t0 = time()
-tuning_parameters = {'n_estimators': [20,50,100], 'min_samples_split': [1,2,4], 'max_features': [1,2,3]}
-print("# Tuning hyper-parameters for recall")
-RF = GridSearchCV(RandomForestClassifier(), tuning_parameters, cv=scv, scoring = 'recall')
-RF.fit(selected_features, labels)
-print("Best parameters =")
-print(RF.best_params_)
-print "tunning time: {0}".format(round(time()-t0, 3))
-
-Clf = RF.best_estimator_
-print "measurements for tuned randomforest classifier: "
-test_classifier(Clf, my_dataset, selected_features_list, folds = 1000)
-
-
-## Adaboost
-t0 = time()
-tuned_parameters = {'n_estimators': [50,100,200], 'learning_rate': [0.4,0.6,1]}
-print("# Tuning hyper-parameters for recall")
-Adaboost = GridSearchCV(AdaBoostClassifier(), tuned_parameters, cv=scv, scoring = 'recall')
-Adaboost.fit(selected_features, labels)
-print("Best parameters =")
-print(Adaboost.best_params_)
-print "tunning time: {0}".format(round(time()-t0, 3))
-
-Clf = Adaboost.best_estimator_
-print "measurements for tuned adaboost classifier: "
-test_classifier(Clf, my_dataset, selected_features_list, folds = 1000)
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
 ### that the version of poi_id.py that you submit can be run on its own and
 ### generates the necessary .pkl files for validating your results.
 
-Clf = RF.best_estimator_
+Clf = l_clf
 dump_classifier_and_data(Clf, my_dataset, selected_features_list)
