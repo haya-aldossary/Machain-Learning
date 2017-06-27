@@ -187,7 +187,7 @@ def evaluate_clf(clf, features, labels, num_iters=1000, test_size=0.3):
 
     for trial in range(num_iters):
 
-        features_train, features_test, labels_train, labels_test =\
+        features_train, features_test, labels_train, labels_test =
 
             cross_validation.train_test_split(features, labels, test_size=test_size)
 
