@@ -189,10 +189,10 @@ def evaluate_clf(clf, features, labels, num_iters=1000, test_size=0.3):
             sys.stdout.write('.')
             sys.stdout.flush()
             first = False
-	print "accuracy" {}".format(mean(accuracy))
+    print "accuracy: {}".format(mean(accuracy))	
     print "precision: {}".format(mean(precision))
     print "recall:    {}".format(mean(recall))
-	return mean(precision), mean(recall), mean(accuracy)
+    return mean(precision), mean(recall), mean(accuracy)	
 
 
 ## Evaluate all functions
