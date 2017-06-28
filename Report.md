@@ -36,6 +36,7 @@ After feature engineering & using SelectKBest, I then scaled all features using 
 I improved this section by applying Support Vector Machine & Logistic Regression to  Random Forest Classifer "from the pervious submitiom".
 
 Post-tuning results of them as following:
+
 Algorithm:   Logistic Regression     Percision:     0.382       Recall:  0.415
 
 Algorithm:   Support Vector Classifier     Percision:    0.518        Recall:  0.219
