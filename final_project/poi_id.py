@@ -127,13 +127,12 @@ def get_k_best(data_dict, features_list, k):
     return k_best_features
 
 best_features = get_k_best(my_dataset, my_feature_list, num_features)
-
+target_label = 'poi'
 my_feature_list = [target_label] + best_features.keys()
 
 print "{0} selected features: {1}\n".format(len(my_feature_list) - 1, my_feature_list[1:])
 
 data = featureFormat(my_dataset, my_feature_list)
-
 labels, features = targetFeatureSplit(data)
 
 from sklearn import preprocessing
@@ -148,9 +147,7 @@ features = scaler.fit_transform(features)
 from sklearn.linear_model import LogisticRegression
 
 l_clf = Pipeline(steps=[
-
         ('scaler', StandardScaler()),
-
         ('classifier', LogisticRegression(tol = 0.001, C = 10**-8, penalty = 'l2', random_state = 42))])
 
 ### Support Vector Machine Classifier
@@ -160,15 +157,11 @@ from sklearn.svm import SVC
 s_clf = SVC(kernel='rbf', C=1000,gamma = 0.0001,random_state = 42, class_weight = 'auto')
 
 
-
 ### Random Forest
 
 from sklearn.ensemble import RandomForestClassifier
 
 rf_clf = RandomForestClassifier(max_depth = 5,max_features = 'sqrt',n_estimators = 10, random_state = 42)
-
-
-
 
 
 ###TAsk 5: evaluate function
@@ -178,55 +171,34 @@ def evaluate_clf(clf, features, labels, num_iters=1000, test_size=0.3):
     print clf
 
     accuracy = []
-
     precision = []
-
     recall = []
-
     first = True
 
     for trial in range(num_iters):
 
-        features_train, features_test, labels_train, labels_test =
-
-            cross_validation.train_test_split(features, labels, test_size=test_size)
-
+        features_train, features_test, labels_train, labels_test = cross_validation.train_test_split(features, labels, test_size=test_size)
         clf.fit(features_train, labels_train)
-
         predictions = clf.predict(features_test)
-
         accuracy.append(accuracy_score(labels_test, predictions))
-
         precision.append(precision_score(labels_test, predictions))
-
         recall.append(recall_score(labels_test, predictions))
-
         if trial % 10 == 0:
-
             if first:
-
                 sys.stdout.write('\nProcessing')
-
             sys.stdout.write('.')
-
             sys.stdout.flush()
-
             first = False
-
-
+	print "accuracy" {}".format(mean(accuracy))
     print "precision: {}".format(mean(precision))
-
     print "recall:    {}".format(mean(recall))
-
-    return mean(precision), mean(recall)
+	return mean(precision), mean(recall), mean(accuracy)
 
 
 ## Evaluate all functions
 
 evaluate_clf(l_clf, features, labels)
-
 evaluate_clf(s_clf, features, labels)
-
 evaluate_clf(rf_clf, features, labels)
 
 
