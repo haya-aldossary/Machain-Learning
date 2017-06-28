@@ -37,11 +37,11 @@ I improved this section by applying Support Vector Machine & Logistic Regression
 
 Post-tuning results of them as following:
 
-Algorithm:   Logistic Regression     Percision:     0.382       Recall:  0.415
+Algorithm:   Logistic Regression     Percision:     0.39       Recall:  0.42   Accuracy: 0.83
 
-Algorithm:   Support Vector Classifier     Percision:    0.518        Recall:  0.219
+Algorithm:   Support Vector Classifier     Percision:    0.51        Recall:  0.22    Accuracy: 0.87
 
-Algorithm:   Random Forest Classifier     Percision:       0.321     Recall:   0.158
+Algorithm:   Random Forest Classifier     Percision:       0.33     Recall:   0.16      Accuracy: 0.86
 
 Parameters tuning refers to the adjustment of the algorithm when training, in order to improve the fit on the test set. Parameter can influence the outcome of the learning process, the more tuned the parameters, the more biased the algorithm will be to the training data & test harness. The strategy can be effective but it can also lead to more fragile models & overfit the test harness but don't perform well in practice
 
@@ -65,6 +65,6 @@ I used cross-validation ( evaluate_clf function in poi_id.py where I start 1000 
 
 For this assignment, I used precision & recall as 2 main evaluation metrics. The best performance belongs to logistic regression (precision: 0.382 & recall: 0.415). Precision refer to the ratio of true positive (predicted as POI) to the records that are actually POI while recall described ratio of true positives to people flagged as POI.
 
-Essentially speaking, with recall score of 0.415, it tells us if this model predicts 100 POIs, there would be 41 people are actually POIs and the rest are innocent. With a precision score of 0.382, this model finds 38% of all real POIs in prediction. This model is perfect for finding bad people without any missing, but with 38% probability of wrong. Due to the nature of the dataset, accuracy is not a perfect measurement as even if non-POI are all flagged, the accuracy score will yield that the model is a success. I confidently agree that the classifier should by applied in reality. 
+Essentially speaking, with recall score of 0.42, it tells us if this model predicts 100 POIs, there would be 42 people are actually POIs and the rest are innocent. With a precision score of 0.39, this model finds 38% of all real POIs in prediction. This model is perfect for finding bad people without any missing, but with 39% probability of wrong. Due to the nature of the dataset, accuracy is not a perfect measurement as even if non-POI are all flagged, the accuracy score will yield that the model is a success. I confidently agree that the classifier should by applied in reality. 
 
 Written with [StackEdit](https://stackedit.io/).
