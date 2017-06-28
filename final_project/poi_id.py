@@ -14,6 +14,10 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import recall_score, accuracy_score, precision_score
 from sklearn.preprocessing import MinMaxScaler
 from tester import test_classifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.cross_validation import StratifiedShuffleSplit
+from sklearn import cross_validation
+from numpy import mean
 import pandas as pd
 import numpy as np
 from time import time
@@ -190,10 +194,11 @@ def evaluate_clf(clf, features, labels, num_iters=1000, test_size=0.3):
             sys.stdout.write('.')
             sys.stdout.flush()
             first = False
+
     print "accuracy: {}".format(mean(accuracy))	
     print "precision: {}".format(mean(precision))
     print "recall:    {}".format(mean(recall))
-    return mean(precision), mean(recall), mean(accuracy)	
+    return mean(precision), mean(recall), mean(accuracy)
 
 
 ## Evaluate all functions
@@ -211,4 +216,4 @@ evaluate_clf(rf_clf, features, labels)
 ### generates the necessary .pkl files for validating your results.
 
 Clf = l_clf
-dump_classifier_and_data(Clf, my_dataset, selected_features_list)
+dump_classifier_and_data(Clf, my_dataset, my_feature_list)
