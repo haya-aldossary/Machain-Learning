@@ -63,7 +63,7 @@ I used cross-validation ( evaluate_clf function in poi_id.py where I start 1000 
 
 ***Question 6:Give at least 2 evaluation metrics, and your average performance for each of them. Explain an interpretation of your metrics that says something human-understandable about your algorithm's performance***
 
-For this assignment, I used precision & recall as 2 main evaluation metrics. The best performance belongs to logistic regression (precision: 0.382 & recall: 0.415). Precision refer to the ratio of true positive (predicted as POI) to the records that are actually POI while recall described ratio of true positives to people flagged as POI.
+For this assignment, I used precision & recall as 2 main evaluation metrics. The best performance belongs to logistic regression (precision: 0.39 & recall: 0.42). Precision refer to the ratio of true positive (predicted as POI) to the records that are actually POI while recall described ratio of true positives to people flagged as POI.
 
 Essentially speaking, with recall score of 0.42, it tells us if this model predicts 100 POIs, there would be 42 people are actually POIs and the rest are innocent. With a precision score of 0.39, this model finds 38% of all real POIs in prediction. This model is perfect for finding bad people without any missing, but with 39% probability of wrong. Due to the nature of the dataset, accuracy is not a perfect measurement as even if non-POI are all flagged, the accuracy score will yield that the model is a success. I confidently agree that the classifier should by applied in reality. 
 
