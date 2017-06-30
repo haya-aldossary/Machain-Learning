@@ -31,11 +31,11 @@ It appears that using random forest model tends to have higher precision and ver
 For Logistic Regression model tends to have higher precision points than in it is recall points. And the accuracy for both classifiers are approximately the same.
 
 Based on the plots, the recall scores are relatively low for all classifiers no matter how many features were selected.
-The highrst recall I obtaind for classifiers when using 10 features as listed in the next table with their importance scores in the second column.
+The highret recall I obtaind for classifiers when using 10 features as listed in the next table with their importance scores in the second column that happend by leveraged the use of the scikit-learn's SelectKBest module to select the 10 most influential features
 
 After feature engineering & using SelectKBest, I then scaled all features using min-max scalers. As briefly investigated through exporting CSV, we can see all email and financial data are varied by several order of magnitudes. Therefore, it is vital that we feature-scaling for the features to be considered evenly. For a comprehensive look on the chosen features, we can look at their respective score after using SelectKBest by the table below:
 
-[![Pic1.png](https://s3.postimg.org/nufhb7po3/Pic1.png)](https://postimg.org/image/nufhb7pnz/)
+[![11.png](https://s16.postimg.org/4ug59mcit/image.png)](https://postimg.org/image/5wqbs5vc1/)
 
 loan_advances had a considerably high score with only 3 non-NaN values. The K-best approach is an 
 automated univariate feature selection algorithm.
