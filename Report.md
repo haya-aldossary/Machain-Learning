@@ -37,8 +37,7 @@ After feature engineering & using SelectKBest, I then scaled all features using 
 
 [![11.png](https://s16.postimg.org/4ug59mcit/image.png)](https://postimg.org/image/5wqbs5vc1/)
 
-loan_advances had a considerably high score with only 3 non-NaN values. The K-best approach is an 
-automated univariate feature selection algorithm.
+loan_advances had a considerably high score with only 3 non-NaN values. The K-best approach is an automated univariate feature selection algorithm. Then, I engineered a feature, get_k_best function which was a ratio of the total number of emails to and from a POI to the total number of emails sent or received. At the final analysis, I've got  a total of 10 features, as they slightly increased the precision and accuracy of most of the machine learning algorithms tested.
 
 LR:
 precision: 0.170865993728
