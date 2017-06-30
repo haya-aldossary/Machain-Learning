@@ -1,4 +1,4 @@
-                                                                                                                                                                                  
+                                                                                                                                                                                 
 ***Question 1: Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it. As part of your answer, give some background on the dataset and how it can be used to answer the project question. Were there any outliers in the data when you got it, and how did you handle those?***
 
 #Introduction:
@@ -40,6 +40,7 @@ After feature engineering & using SelectKBest, I then scaled all features using 
 loan_advances had a considerably high score with only 3 non-NaN values. The K-best approach is an 
 automated univariate feature selection algorithm.
 
+LR:
 precision: 0.170865993728
 recall:    0.185535425685
 
