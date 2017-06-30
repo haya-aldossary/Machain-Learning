@@ -30,18 +30,13 @@ Measuring how many e-mails are frequently received by a person from POIs.
 It appears that using random forest model tends to have higher precision and very low recall compared with its precision score.
 For Logistic Regression model tends to have higher precision points than in it is recall points. And the accuracy for both classifiers are approximately the same.
 
-based o
-
-From the previous part, I noticed that the recall scores for both classifiers are too low. Do, I decided to use GridSearchCV to find the pest hyper-parameters to obtain higher recall scores for both classifiers. These hyper parameters determines the complexity of the classifiers and I want to get the correct classifier values to perform better in future. For random forest classifier, I tuned the value of max_features, min_sample_splits as well as n_estimators. The higher max_features and n_estimators the higher complexity the classifier wil be. The optimal values
-for recall I found:
-RF: 'max_features': 2, 'min_samples_split': 2, 'n_estimators': 100
-LF:'max_features': 4 'n_estimators': 150}
-
+Based on the plots, the recall scores are relatively low for all classifiers no matter how many features were selected.
+The highrst recall I obtaind for classifiers when using 10 features as listed in the next table with their importance scores in the second column.
 
 After feature engineering & using SelectKBest, I then scaled all features using min-max scalers. As briefly investigated through exporting CSV, we can see all email and financial data are varied by several order of magnitudes. Therefore, it is vital that we feature-scaling for the features to be considered evenly. For a comprehensive look on the chosen features, we can look at their respective score after using SelectKBest by the table below:
 
-
 [![Pic1.png](https://s3.postimg.org/nufhb7po3/Pic1.png)](https://postimg.org/image/nufhb7pnz/)
+
 
 ***Question 3: What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?***
 ***Question 4: What does it mean to tune the parameters of an algorithm, and what can happen if you don’t do this well? How did you tune the parameters of your particular algorithm?***
