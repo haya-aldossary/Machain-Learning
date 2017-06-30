@@ -22,7 +22,7 @@ Measuring how many e-mails are frequently sent by a person to POIs.
 Measuring how many e-mails are frequently received by a person from POIs.
 
 
-
+[![1.png](https://s12.postimg.org/qwhok8gql/image.png)](https://postimg.org/image/6p48rxj95/)[![2.png](https://s7.postimg.org/5dn2i8kxn/image.png)](https://postimg.org/image/3lu3nc1kn/)
 
 Main purpose of composing ratio of POI message is we expect POI contact each other more often than non-POI and the relationship could be non-linear. The initial assumption behind these features is: the relationship between POI is much more stronger than between POI and non-POIs, and if we quickly did back-of-the-envelope Excel scatter plot, there might be truth to that hypothesis. The fact that shared_receipt_with_poi is included after using SelectKBest proved that this is a crucial features, as they also slightly increased the precision and recall of most of the machine learning algorithms used in later part of the analysis (e.g precision & recall for Support Vector Classifer before adding new feature are 0.503 & 0.223 respectively, while after adding new feature, the results are 0.504 & 0.225)
  
