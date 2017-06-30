@@ -17,10 +17,6 @@ TOTAL is the outlier name as a summary of all persons. it can be verified by cal
 
 I used scikit-learn SelectKBest to select best 10 influential features and used those featuers for all the upcoming algorithm. Unsurprisingly, 9 out of 10 features related to financial data and only 1 features called shared_receipt_with_poi (messages from/to the POI divided by to/from messages from the person) were attempted to engineere. 
 
-I chose these features a
-
-{'salary': 18.289684043404513, 'to_messages': 1.6463411294420076, 'deferral_payments': 0.22461127473600989, 'total_payments': 8.7727777300916792, 'loan_advances': 7.1840556582887247, 'bonus': 20.792252047181535, 'director_fees': 2.1263278020077054, 'total_stock_value': 24.182898678566879, 'shared_receipt_with_poi': 8.589420731682381, 'from_poi_to_this_person': 5.2434497133749582, 'exercised_stock_options': 24.815079733218194, 'from_messages': 0.16970094762175533, 'other': 4.1874775069953749, 'from_this_person_to_poi': 2.3826121082276739, 'deferred_income': 11.458476579280369, 'expenses': 6.0941733106389453, 'restricted_stock': 9.2128106219771002, 'long_term_incentive': 9.9221860131898225}
-
 Main purpose of composing ratio of POI message is we expect POI contact each other more often than non-POI and the relationship could be non-linear. The initial assumption behind these features is: the relationship between POI is much more stronger than between POI and non-POIs, and if we quickly did back-of-the-envelope Excel scatter plot, there might be truth to that hypothesis. The fact that shared_receipt_with_poi is included after using SelectKBest proved that this is a crucial features, as they also slightly increased the precision and recall of most of the machine learning algorithms used in later part of the analysis (e.g precision & recall for Support Vector Classifer before adding new feature are 0.503 & 0.223 respectively, while after adding new feature, the results are 0.504 & 0.225). Two features are created recently:
 
 1- **to_poi_message_ratio** :
@@ -34,7 +30,9 @@ Measuring how many e-mails are frequently received by a person from POIs.
 It appears that using random forest model tends to have higher precision and very low recall compared with its precision score.
 For Logistic Regression model tends to have higher precision points than in it is recall points. And the accuracy for both classifiers are approximately the same.
 
-#From the previous part, I noticed that the recall scores for both classifiers are too low. Do, I decided to use GridSearchCV to find the pest hyper-parameters to obtain higher recall scores for both classifiers. These hyper parameters determines the complexity of the classifiers and I want to get the correct classifier values to perform better in future. For random forest classifier, I tuned the value of max_features, min_sample_splits as well as n_estimators. The higher max_features and n_estimators the higher complexity the classifier wil be. The optimal values
+based o
+
+From the previous part, I noticed that the recall scores for both classifiers are too low. Do, I decided to use GridSearchCV to find the pest hyper-parameters to obtain higher recall scores for both classifiers. These hyper parameters determines the complexity of the classifiers and I want to get the correct classifier values to perform better in future. For random forest classifier, I tuned the value of max_features, min_sample_splits as well as n_estimators. The higher max_features and n_estimators the higher complexity the classifier wil be. The optimal values
 for recall I found:
 RF: 'max_features': 2, 'min_samples_split': 2, 'n_estimators': 100
 LF:'max_features': 4 'n_estimators': 150}
