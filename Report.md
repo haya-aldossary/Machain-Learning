@@ -1,14 +1,13 @@
-
+                                                                                                                                                                                  
 ***Question 1: Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it. As part of your answer, give some background on the dataset and how it can be used to answer the project question. Were there any outliers in the data when you got it, and how did you handle those?***
 
 #Introduction:
 
 The goal of this project is to use financial and email data from Enron Corporation in order to build z classifier that can distinguish persons of interest POIs who possibly involved in the fraud and corruption. it was an American energy, commodities, and services company based in Houston, Texas. It was founded in 1985 as the result of a merger between Houston Natural Gas and InterNorth, both relatively small regional companies in the U.S. Before its bankruptcy on December 2, 2001, Enron employed approximately 20,000 staff and was one of the world's major electricity, natural gas, communications and pulp and paper companies, with claimed revenues of nearly $101 billion during 2000. Fortune named Enron "America's Most Innovative Company" for six consecutive years. ). The corpus is widely used for various machine learning problem and although it has been labeled already, the value is the potential application for similar cases in other companies or spam filtering application. 
 
-### About the dataset: 
-Dataset contains 146 persons in total, however, 18 persons of them are identified as POI while the rest of them are non POI. There are 19 features for each person, person's salary and emails receiver for instance. This dataset contains missing values, for example there is no restricted_stock_deferred features for 128 persons and no director_fees feature for 129 persons.  
+### About the dataset: Dataset contains 146 persons in total, however, 18 persons of them are identified as POI while the rest of them are non POI. There are 19 features for each person, person's salary and emails receiver for instance. This dataset contains missing values, for example there is no restricted_stock_deferred features for 128 persons and no director_fees feature for 129 persons.  
 
-[![Capture111.png](https://s9.postimg.org/j5zbnwqb3/Capture111.png)](https://postimg.org/image/ou5mesunf/)
+  [![Capture111.png](https://s9.postimg.org/j5zbnwqb3/Capture111.png)](https://postimg.org/image/ou5mesunf/)
 
 TOTAL is the outlier name as a summary of all persons. it can be verified by calculating the sum of all persons salaries then the result is exactly as same as the salary for TOTAL. TOTAL in this case is outlier and will affect the performance of the classifier, thus, TOTAL is removed. Eventually, 145 persons ( records ) is remaining after removing TOTAL from the dataset.
 
@@ -16,6 +15,7 @@ TOTAL is the outlier name as a summary of all persons. it can be verified by cal
 ***Question 2: What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it.***
 
 I used scikit-learn SelectKBest to select best 10 influential features and used those featuers for all the upcoming algorithm. Unsurprisingly, 9 out of 10 features related to financial data and only 1 features called shared_receipt_with_poi (messages from/to the POI divided by to/from messages from the person) were attempted to engineere. 
+
 
 Main purpose of composing ratio of POI message is we expect POI contact each other more often than non-POI and the relationship could be non-linear. The initial assumption behind these features is: the relationship between POI is much more stronger than between POI and non-POIs, and if we quickly did back-of-the-envelope Excel scatter plot, there might be truth to that hypothesis. The fact that shared_receipt_with_poi is included after using SelectKBest proved that this is a crucial features, as they also slightly increased the precision and recall of most of the machine learning algorithms used in later part of the analysis (e.g precision & recall for Support Vector Classifer before adding new feature are 0.503 & 0.223 respectively, while after adding new feature, the results are 0.504 & 0.225). Two features are created recently:
 
@@ -36,6 +36,12 @@ The highrst recall I obtaind for classifiers when using 10 features as listed in
 After feature engineering & using SelectKBest, I then scaled all features using min-max scalers. As briefly investigated through exporting CSV, we can see all email and financial data are varied by several order of magnitudes. Therefore, it is vital that we feature-scaling for the features to be considered evenly. For a comprehensive look on the chosen features, we can look at their respective score after using SelectKBest by the table below:
 
 [![Pic1.png](https://s3.postimg.org/nufhb7po3/Pic1.png)](https://postimg.org/image/nufhb7pnz/)
+
+loan_advances had a considerably high score with only 3 non-NaN values. The K-best approach is an 
+automated univariate feature selection algorithm.
+
+precision: 0.170865993728
+recall:    0.185535425685
 
 
 ***Question 3: What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?***
